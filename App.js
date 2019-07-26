@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  NativeModules,
 } from 'react-native';
 
 import {
@@ -24,7 +25,19 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import MessageQueue from 'react-native/Libraries/BatchedBridge/MessageQueue';
+
+const spyFunction = msg => {
+  if (msg.module === 'RCTDeviceEventEmitter') {
+    console.log(msg);
+  }
+};
+
+MessageQueue.spy(spyFunction);
+
 const App = () => {
+  NativeModules.HelloCxxModule.foo(r => console.log('foo r', r));
+  NativeModules.HelloCxxModule.bar();
   return (
     <Fragment>
       <StatusBar barStyle="dark-content" />
