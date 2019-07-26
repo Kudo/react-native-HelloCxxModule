@@ -2,9 +2,6 @@ apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
 
-import de.undercouch.gradle.tasks.download.Download
-import org.apache.tools.ant.filters.ReplaceTokens
-
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -20,6 +17,9 @@ import org.apache.tools.ant.filters.ReplaceTokens
  *
  *   // the entry file for bundle generation
  *   entryFile: "index.android.js",
+ *
+ *   // https://facebook.github.io/react-native/docs/performance#enable-the-ram-format
+ *   bundleCommand: "ram-bundle",
  *
  *   // whether to bundle JS and assets in debug mode
  *   bundleInDebug: false,
@@ -76,7 +76,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+    entryFile: "index.js",
+    enableHermes: false,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -96,125 +97,35 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+/**
+ * The preferred build flavor of JavaScriptCore.
+ *
+ * For example, to use the international variant, you can use:
+ * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ *
+ * The international variant includes ICU i18n library and necessary data
+ * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
+ * give correct results when using with locales other than en-US.  Note that
+ * this variant is about 6MiB larger per architecture than default.
+ */
+def jscFlavor = 'org.webkit:android-jsc:+'
 
-def rnRootDir = new File("$buildDir/../../../node_modules/react-native");
-def downloadsDir = new File("$rnRootDir/ReactAndroid/build/downloads");
-def thirdPartyNdkDir = new File("$rnRootDir/ReactAndroid/build/third_party");
-def extractedJniLibsDir = new File("$rnRootDir/ReactAndroid/build/jniLibs");
-
-task createNativeDepsDirectories {
-    downloadsDir.mkdirs()
-    thirdPartyNdkDir.mkdirs()
-}
-
-task downloadBoost(dependsOn: createNativeDepsDirectories, type: Download) {
-    src "https://github.com/react-native-community/boost-for-react-native/releases/download/v${BOOST_VERSION.replace("_", ".")}-0/boost_${BOOST_VERSION}.tar.gz"
-    onlyIfNewer true
-    overwrite false
-    dest new File(downloadsDir, "boost_${BOOST_VERSION}.tar.gz")
-}
-
-task prepareBoost(dependsOn: [downloadBoost], type: Copy) {
-    from tarTree(resources.gzip(downloadBoost.dest))
-    from 'src/main/jni/third-party/boost/Android.mk'
-    include 'Android.mk', "boost_${BOOST_VERSION}/boost/**/*.hpp", 'boost/boost/**/*.hpp'
-    includeEmptyDirs = false
-    into "$thirdPartyNdkDir/boost"
-    doLast {
-        file("$thirdPartyNdkDir/boost/boost").renameTo("$thirdPartyNdkDir/boost/boost_${BOOST_VERSION}")
-    }
-}
-
-task downloadDoubleConversion(dependsOn: createNativeDepsDirectories, type: Download) {
-    src "https://github.com/google/double-conversion/archive/v${DOUBLE_CONVERSION_VERSION}.tar.gz"
-    onlyIfNewer true
-    overwrite false
-    dest new File(downloadsDir, "double-conversion-${DOUBLE_CONVERSION_VERSION}.tar.gz")
-}
-
-task prepareDoubleConversion(dependsOn: [downloadDoubleConversion], type: Copy) {
-    from tarTree(downloadDoubleConversion.dest)
-    from 'src/main/jni/third-party/double-conversion/Android.mk'
-    include "double-conversion-${DOUBLE_CONVERSION_VERSION}/src/**/*", 'Android.mk'
-    filesMatching('*/src/**/*', {fname -> fname.path = "double-conversion/${fname.name}"})
-    includeEmptyDirs = false
-    into "$thirdPartyNdkDir/double-conversion"
-}
-
-task downloadFolly(dependsOn: createNativeDepsDirectories, type: Download) {
-    src "https://github.com/facebook/folly/archive/v${FOLLY_VERSION}.tar.gz"
-    onlyIfNewer true
-    overwrite false
-    dest new File(downloadsDir, "folly-${FOLLY_VERSION}.tar.gz");
-}
-
-task prepareFolly(dependsOn: [downloadFolly], type: Copy) {
-    from tarTree(downloadFolly.dest)
-    from 'src/main/jni/third-party/folly/Android.mk'
-    include "folly-${FOLLY_VERSION}/folly/**/*", 'Android.mk'
-    eachFile {fname -> fname.path = (fname.path - "folly-${FOLLY_VERSION}/")}
-    includeEmptyDirs = false
-    into "$thirdPartyNdkDir/folly"
-}
-
-task downloadGlog(dependsOn: createNativeDepsDirectories, type: Download) {
-    src "https://github.com/google/glog/archive/v${GLOG_VERSION}.tar.gz"
-    onlyIfNewer true
-    overwrite false
-    dest new File(downloadsDir, "glog-${GLOG_VERSION}.tar.gz")
-}
-
-// Prepare glog sources to be compiled, this task will perform steps that normally should've been
-// executed by automake. This way we can avoid dependencies on make/automake
-task prepareGlog(dependsOn: [downloadGlog], type: Copy) {
-    from tarTree(downloadGlog.dest)
-    from 'src/main/jni/third-party/glog/'
-    include "glog-${GLOG_VERSION}/src/**/*", 'Android.mk', 'config.h'
-    includeEmptyDirs = false
-    filesMatching('**/*.h.in') {
-        filter(ReplaceTokens, tokens: [
-                ac_cv_have_unistd_h: '1',
-                ac_cv_have_stdint_h: '1',
-                ac_cv_have_systypes_h: '1',
-                ac_cv_have_inttypes_h: '1',
-                ac_cv_have_libgflags: '0',
-                ac_google_start_namespace: 'namespace google {',
-                ac_cv_have_uint16_t: '1',
-                ac_cv_have_u_int16_t: '1',
-                ac_cv_have___uint16: '0',
-                ac_google_end_namespace: '}',
-                ac_cv_have___builtin_expect: '1',
-                ac_google_namespace: 'google',
-                ac_cv___attribute___noinline: '__attribute__ ((noinline))',
-                ac_cv___attribute___noreturn: '__attribute__ ((noreturn))',
-                ac_cv___attribute___printf_4_5: '__attribute__((__format__ (__printf__, 4, 5)))'
-        ])
-        it.path = (it.name - '.in')
-    }
-    into "$thirdPartyNdkDir/glog"
-
-    doLast {
-        copy {
-            from fileTree(dir: "$thirdPartyNdkDir/glog", includes: ["stl_logging.h", "logging.h", "raw_logging.h", "vlog_is_on.h", "**/glog/log_severity.h"]).files
-            includeEmptyDirs = false
-            into "$thirdPartyNdkDir/glog/exported/glog"
-        }
-    }
-}
-
-task prepareExtractedLibs(type: Copy) {
-    def aarFile = fileTree(dir: "$rnRootDir/android/").include('**/*.aar').getSingleFile()
-    from zipTree(aarFile)
-    include 'jni/**/*'
-    into "$extractedJniLibsDir"
-}
-
-task prepareRNNdk(dependsOn: [prepareBoost, prepareDoubleConversion, prepareFolly, prepareGlog, prepareExtractedLibs]) {
-}
+/**
+ * Whether to enable the Hermes VM.
+ *
+ * This should be set on project.ext.react and mirrored here.  If it is not set
+ * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
+ * and the benefits of using Hermes will therefore be sharply reduced.
+ */
+def enableHermes = project.ext.react.get("enableHermes", false);
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "com.hellocxxmodule"
@@ -222,59 +133,71 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        ndk {
-            abiFilters "armeabi-v7a", "x86"
-        }
-        externalNativeBuild {
-            ndkBuild {
-                arguments "V=1"
-            }
-        }
     }
     splits {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86"
+            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
         }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://facebook.github.io/react-native/docs/signed-apk-android.
+            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-
-    externalNativeBuild {
-        ndkBuild {
-            path file('src/main/jni/Android.mk')
-        }
-    }
-
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
-            // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            // https://developer.android.com/studio/build/configure-apk-splits.html
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
+
         }
     }
 
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn prepareRNNdk
+    packagingOptions {
+        pickFirst '**/armeabi-v7a/libc++_shared.so'
+        pickFirst '**/x86/libc++_shared.so'
+        pickFirst '**/arm64-v8a/libc++_shared.so'
+        pickFirst '**/x86_64/libc++_shared.so'
+        pickFirst '**/x86/libjsc.so'
+        pickFirst '**/armeabi-v7a/libjsc.so'
     }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    if (enableHermes) {
+      def hermesPath = "../../node_modules/hermesvm/android/";
+      debugImplementation files(hermesPath + "hermes-debug.aar")
+      releaseImplementation files(hermesPath + "hermes-release.aar")
+    } else {
+      implementation jscFlavor
+    }
 }
 
 // Run this once to be able to run the application with BUCK
@@ -283,3 +206,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
