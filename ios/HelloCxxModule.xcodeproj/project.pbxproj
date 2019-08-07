@@ -18,6 +18,8 @@
 		2DCD954D1E0B4F2C00145EB5 /* HelloCxxModuleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* HelloCxxModuleTests.m */; };
 		48DB294037083913199540CB /* libPods-HelloCxxModuleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AFD60398182E8EF5C738E9D /* libPods-HelloCxxModuleTests.a */; };
 		650766E5E5583F585352F29A /* libPods-HelloCxxModule.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A18F0516F8E48072F9D82A0 /* libPods-HelloCxxModule.a */; };
+		83B92B2622FB1FD80018BEA8 /* HelloCxxModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 83B92B2422FB1FD80018BEA8 /* HelloCxxModule.cpp */; };
+		83B92B2922FB20300018BEA8 /* RCTHelloCxxModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 83B92B2822FB20300018BEA8 /* RCTHelloCxxModule.mm */; };
 		AB6E0E2E1389481DFDFFEABC /* libPods-HelloCxxModule-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 973B885D95CDDB19E5AEA934 /* libPods-HelloCxxModule-tvOSTests.a */; };
 		C867FB83F7199FD2ECA893D6 /* libPods-HelloCxxModule-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5431964589EB46FA15735E17 /* libPods-HelloCxxModule-tvOS.a */; };
 /* End PBXBuildFile section */
@@ -61,6 +63,10 @@
 		6B993BA52EC1E59BA6C5FD64 /* Pods-HelloCxxModule.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HelloCxxModule.release.xcconfig"; path = "Target Support Files/Pods-HelloCxxModule/Pods-HelloCxxModule.release.xcconfig"; sourceTree = "<group>"; };
 		712B14243C8212D1876E395A /* Pods-HelloCxxModuleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HelloCxxModuleTests.debug.xcconfig"; path = "Target Support Files/Pods-HelloCxxModuleTests/Pods-HelloCxxModuleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		714653CD29A82446504793C7 /* Pods-HelloCxxModule-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HelloCxxModule-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-HelloCxxModule-tvOS/Pods-HelloCxxModule-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
+		83B92B2422FB1FD80018BEA8 /* HelloCxxModule.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HelloCxxModule.cpp; path = ../android/app/src/main/jni/HelloCxxModule.cpp; sourceTree = "<group>"; };
+		83B92B2522FB1FD80018BEA8 /* HelloCxxModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HelloCxxModule.h; path = ../android/app/src/main/jni/HelloCxxModule.h; sourceTree = "<group>"; };
+		83B92B2722FB20300018BEA8 /* RCTHelloCxxModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RCTHelloCxxModule.h; path = HelloCxxModule/RCTHelloCxxModule.h; sourceTree = "<group>"; };
+		83B92B2822FB20300018BEA8 /* RCTHelloCxxModule.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = RCTHelloCxxModule.mm; path = HelloCxxModule/RCTHelloCxxModule.mm; sourceTree = "<group>"; };
 		8A18F0516F8E48072F9D82A0 /* libPods-HelloCxxModule.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HelloCxxModule.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		973B885D95CDDB19E5AEA934 /* libPods-HelloCxxModule-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HelloCxxModule-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AFD60398182E8EF5C738E9D /* libPods-HelloCxxModuleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HelloCxxModuleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +131,10 @@
 		13B07FAE1A68108700A75B9A /* HelloCxxModule */ = {
 			isa = PBXGroup;
 			children = (
+				83B92B2422FB1FD80018BEA8 /* HelloCxxModule.cpp */,
+				83B92B2522FB1FD80018BEA8 /* HelloCxxModule.h */,
+				83B92B2722FB20300018BEA8 /* RCTHelloCxxModule.h */,
+				83B92B2822FB20300018BEA8 /* RCTHelloCxxModule.mm */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -161,7 +171,6 @@
 				712B14243C8212D1876E395A /* Pods-HelloCxxModuleTests.debug.xcconfig */,
 				B667BEA1D64ACF6B1283D259 /* Pods-HelloCxxModuleTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -308,6 +317,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -528,8 +538,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83B92B2922FB20300018BEA8 /* RCTHelloCxxModule.mm in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				83B92B2622FB1FD80018BEA8 /* HelloCxxModule.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,8 +638,35 @@
 			baseConfigurationReference = 106FFEF4C948CE0A76C40586 /* Pods-HelloCxxModule.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-DevSupport\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTActionSheet\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAnimation\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTLinking\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTNetwork\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTSettings\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTVibration\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTWebSocket\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-fishhook\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/glog\"",
+					"\"${PODS_ROOT}/Headers/Public/yoga\"",
+					"\"${PODS_ROOT}/Folly\"",
+					"\"${PODS_ROOT}/boost-for-react-native\"",
+				);
 				INFOPLIST_FILE = HelloCxxModule/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -646,7 +685,34 @@
 			baseConfigurationReference = 6B993BA52EC1E59BA6C5FD64 /* Pods-HelloCxxModule.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CURRENT_PROJECT_VERSION = 1;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/DoubleConversion\"",
+					"\"${PODS_ROOT}/Headers/Public/React-Core\"",
+					"\"${PODS_ROOT}/Headers/Public/React-DevSupport\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTActionSheet\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTAnimation\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTBlob\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTImage\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTLinking\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTNetwork\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTSettings\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTText\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTVibration\"",
+					"\"${PODS_ROOT}/Headers/Public/React-RCTWebSocket\"",
+					"\"${PODS_ROOT}/Headers/Public/React-cxxreact\"",
+					"\"${PODS_ROOT}/Headers/Public/React-fishhook\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsi\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsiexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/React-jsinspector\"",
+					"\"${PODS_ROOT}/Headers/Public/glog\"",
+					"\"${PODS_ROOT}/Headers/Public/yoga\"",
+					"\"${PODS_ROOT}/Folly\"",
+					"\"${PODS_ROOT}/boost-for-react-native\"",
+				);
 				INFOPLIST_FILE = HelloCxxModule/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
@@ -774,7 +840,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -819,6 +885,16 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_HAVE_PTHREAD=1",
+					"-Wno-comma",
+					"-Wno-shorten-64-to-32",
+					"-Wno-documentation",
+				);
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -827,7 +903,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -864,6 +940,16 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-DFOLLY_NO_CONFIG",
+					"-DFOLLY_MOBILE=1",
+					"-DFOLLY_USE_LIBCPP=1",
+					"-DFOLLY_HAVE_PTHREAD=1",
+					"-Wno-comma",
+					"-Wno-shorten-64-to-32",
+					"-Wno-documentation",
+				);
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
